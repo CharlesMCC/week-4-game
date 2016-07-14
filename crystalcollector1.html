@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>simple crystal game</title>
+  <style type="text/css">
+  	/*
+  		we threw in some styling to make the picture fit on the page better
+	*/
+    .crystalImage {
+      width: 300px;
+      height: 300px;
+    }
+  </style>
+</head>
+<body>
+<p><span id="wins"></span></p>
+<p><span id="losses"></span></p>
+
+<p><span id="number"></span></p>
+
+
+
+<p><span id="yourNumber"></span></p>
+
+<div id="crystals">
+</div>
+
+<!-- we added jQuery -->
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+<script type="text/javascript">
+
+//Creating variables to be used through out the entirety of the program for wins, losses, max possible random number, min possible random number and images to be shuffled.
+var wins=0;
+var losses=0;
+var max =100;
+var min = 25;
+var imagesC = ["https://upload.wikimedia.org/wikipedia/commons/f/f9/Sapphire_Gem.jpg","http://www.agta.org/gemstones/images/ruby.jpg","http://scenarieconomici.it/wp-content/uploads/2015/12/smeraldo.jpg","http://www.agta.org/gemstones/images/topaz.jpg",];
+
+ 
+//Creates a function to randomly generate a goal number
+function getRandomArbitrary(min, max) {
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
+//creates a variable for randomly picking an image for the gems
+ randomImage = imagesC[Math.floor(Math.random() * imagesC.length)];
+
+
+
+//console.log(getRandomArbitrary(max,min))
+
+
+ function startGame(){ $( document ).ready(function() {
+    var numberToGuess = getRandomArbitrary(min,max);
+    var counter = 0;
+    var numbers = [10, 5, 3, 7];
+
+    //This snippet of code sets up the shuffling of the gems
+    function shuffle(a) {
+        var j, x, i;
+        for (i = a.length; i; i--) {
+            j = Math.floor(Math.random() * i);
+            x = a[i - 1];
+            a[i - 1] = a[j];
+            a[j] = x;
+        }
+    } 
+
+    //calling shuffle function  
+    shuffle(numbers);
+    console.log(numbers);
+    //printing to html
+    $('#number').text("You have to get all of the numbers to add up to: "+numberToGuess);
+    $('#wins').text("Wins: "+wins);
+    $('#losses').text("Losses: "+losses);
+    for (var i=0; i< numbers.length; i++){
+      var imageCrystal = $('<img>');
+      imageCrystal.attr('data-num', numbers[i]);
+      imageCrystal.attr('src', randomImage);
+      imageCrystal.attr('alt', 'crystals');
+      imageCrystal.addClass('crystalImage');
+      $('#crystals').append(imageCrystal);
+    }
+
+
+//taking user input based on image clicked
+    $('.crystalImage').on('click', function(){
+      counter = counter + parseInt($(this).data('num'));
+      $('#yourNumber').text("Current Counter: "+ counter);
+      if (counter == numberToGuess){
+        alert('You won!!!!');
+        wins+=1
+        startGame();
+      }else if( counter > numberToGuess){
+        alert('You lost!');
+        losses+=1
+        startGame();
+      }
+    });
+  });}
+</script>
+</body>
+</html>
